@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module":"ESNext",
+		"sourceMap": false,
+		"experimentalDecorators": true,
+		"newLine": "LF",
+		"strict": true,
+		"watch": true
+	},
+	"exclude":[
+		"build",
+		"node_modules",
+		"bower_components",
+		"demo/PolymerTests/bower_components"
+	]
+
+}

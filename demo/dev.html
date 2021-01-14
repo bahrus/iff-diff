@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <iff-diff id=iffdiff></iff-diff>
+    <div>I am here</div>
+    <script>
+        iffdiff.lhs = 10;
+        iffdiff.rhs = 10;
+        iffdiff.if = true;
+        iffdiff.equals = true;
+        ifdiff.setAttr = 'attr';
+        ifdiff.setClass = 'someClass';
+        ifdiff.setPart = 'somePart';
+    </script>
+    <script type=module>
+        import '../iff-diff.js';
+    </script>
+</body>
+</html>
