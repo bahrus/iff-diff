@@ -9,11 +9,13 @@ import {Reactor, ReactiveSurface} from 'xtal-element/lib/Reactor.js';
 const propDefGetter = [
     ({iff, equals, notEquals, includes}: IffDiff) => ({
         type: Boolean,
-        dry: true
+        dry: true,
+        async: true,
     }),
     ({lhs, rhs}: IffDiff) => ({
         type: Object,
-        dry: true
+        dry: true,
+        async: true,
     }),
     ({setAttr, setClass, setPart}: IffDiff) => ({
         type: String,
@@ -23,6 +25,10 @@ const propDefGetter = [
         type: Boolean,
         dry: true,
         notify: true,
+        reflect: true,
+    }),
+    ({evaluatedCount}: IffDiff) => ({
+        type: Number,
         reflect: true,
     })
 ] as destructPropInfo[];
@@ -50,10 +56,11 @@ const linkValue = ({iff, lhs, rhs, includes, equals, notEquals, self}: IffDiff) 
     }else{
         self.value = !!val;
     }
-     
+    self.evaluatedCount++;
 };
 
-const affectNextSibling = ({self, value, setAttr, setClass, setPart}: IffDiff) => {
+const affectNextSibling = ({self, value, setAttr, setClass, setPart, evaluatedCount}: IffDiff) => {
+    if(evaluatedCount === 0) return;
     const ns = self.nextElementSibling;
     if(ns ===  null){
         setTimeout(() => affectNextSibling(self), 50);
@@ -129,7 +136,7 @@ export class IffDiff extends HTMLElement implements ReactiveSurface{
     setPart: string | undefined;
 
     
-
+    evaluatedCount: number = 0;
 
     /**
      * Computed based on values of  if / equals / not_equals / includes 
