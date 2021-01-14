@@ -19,23 +19,28 @@ const propDefGetter = [
     }),
     ({setAttr, setClass, setPart}: IffDiff) => ({
         type: String,
-        dry: true
+        dry: true,
+        async: true,
     }),
     ({value}: IffDiff) => ({
         type: Boolean,
         dry: true,
         notify: true,
         reflect: true,
+        async: true,
     }),
     ({evaluatedCount}: IffDiff) => ({
         type: Number,
         reflect: true,
+        async: true,
+        dry: true,
     })
 ] as destructPropInfo[];
 const propDefs = getPropDefs(propDefGetter);
 
 const linkValue = ({iff, lhs, rhs, includes, equals, notEquals, self}: IffDiff) => {
     let val = self.iff;
+    console.log(iff, lhs, rhs, includes, equals, notEquals);
     if(val){
         if(equals || notEquals){
             let eq = false;
@@ -61,6 +66,7 @@ const linkValue = ({iff, lhs, rhs, includes, equals, notEquals, self}: IffDiff) 
 
 const affectNextSibling = ({self, value, setAttr, setClass, setPart, evaluatedCount}: IffDiff) => {
     if(evaluatedCount === 0) return;
+    console.log(value, setAttr, setClass, setPart, evaluatedCount);
     const ns = self.nextElementSibling;
     if(ns ===  null){
         setTimeout(() => affectNextSibling(self), 50);

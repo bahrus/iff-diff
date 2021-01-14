@@ -16,22 +16,27 @@ const propDefGetter = [
     }),
     ({ setAttr, setClass, setPart }) => ({
         type: String,
-        dry: true
+        dry: true,
+        async: true,
     }),
     ({ value }) => ({
         type: Boolean,
         dry: true,
         notify: true,
         reflect: true,
+        async: true,
     }),
     ({ evaluatedCount }) => ({
         type: Number,
         reflect: true,
+        async: true,
+        dry: true,
     })
 ];
 const propDefs = getPropDefs(propDefGetter);
 const linkValue = ({ iff, lhs, rhs, includes, equals, notEquals, self }) => {
     let val = self.iff;
+    console.log(iff, lhs, rhs, includes, equals, notEquals);
     if (val) {
         if (equals || notEquals) {
             let eq = false;
@@ -60,6 +65,7 @@ const linkValue = ({ iff, lhs, rhs, includes, equals, notEquals, self }) => {
 const affectNextSibling = ({ self, value, setAttr, setClass, setPart, evaluatedCount }) => {
     if (evaluatedCount === 0)
         return;
+    console.log(value, setAttr, setClass, setPart, evaluatedCount);
     const ns = self.nextElementSibling;
     if (ns === null) {
         setTimeout(() => affectNextSibling(self), 50);
