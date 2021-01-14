@@ -2,7 +2,8 @@
   "name": "iff-diff",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "iff-diff.js",
+  "module": "iff-diff.js"
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "web-dev-server --node-resolve --app-index demo/dev.html  --watch --open"
