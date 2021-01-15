@@ -1,8 +1,4 @@
-import { define } from 'xtal-element/lib/define.js';
-import { getPropDefs } from 'xtal-element/lib/getPropDefs.js';
-import { letThereBeProps } from 'xtal-element/lib/letThereBeProps.js';
-import { hydrate } from 'xtal-element/lib/hydrate.js';
-import { Reactor } from 'xtal-element/lib/Reactor.js';
+import { xc } from 'xtal-element/lib/XtalCore.js';
 const propDefGetter = [
     ({ iff, equals, notEquals, includes, evaluatedValue }) => ({
         type: Boolean,
@@ -32,7 +28,7 @@ const propDefGetter = [
         async: true,
     }),
 ];
-const propDefs = getPropDefs(propDefGetter);
+const propDefs = xc.getPropDefs(propDefGetter);
 const linkValue = ({ iff, lhs, rhs, includes, equals, notEquals, self, disabled }) => {
     let val = self.iff;
     if (val) {
@@ -95,7 +91,7 @@ export class IffDiff extends HTMLElement {
         super(...arguments);
         //boilerplate
         this.propActions = propActions;
-        this.reactor = new Reactor(this);
+        this.reactor = new xc.Reactor(this);
         this.self = this;
         this.evaluatedValue = false;
         /**
@@ -108,9 +104,9 @@ export class IffDiff extends HTMLElement {
     }
     connectedCallback() {
         this.style.display = 'none';
-        hydrate(this, propDefs);
+        xc.hydrate(this, propDefs);
     }
 }
 IffDiff.is = 'iff-diff';
-letThereBeProps(IffDiff, propDefs, 'onPropChange');
-define(IffDiff);
+xc.letThereBeProps(IffDiff, propDefs, 'onPropChange');
+xc.define(IffDiff);

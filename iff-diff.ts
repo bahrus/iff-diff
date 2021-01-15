@@ -1,10 +1,4 @@
-import {define} from 'xtal-element/lib/define.js';
-import {destructPropInfo, PropDef, PropAction} from 'xtal-element/types.d.js';
-import {getPropDefs} from 'xtal-element/lib/getPropDefs.js';
-import {letThereBeProps} from 'xtal-element/lib/letThereBeProps.js';
-import {hydrate} from 'xtal-element/lib/hydrate.js';
-import {Reactor, ReactiveSurface} from 'xtal-element/lib/Reactor.js';
-
+import {xc, destructPropInfo, PropAction, ReactiveSurface, PropDef} from 'xtal-element/lib/XtalCore.js';
 
 const propDefGetter = [
     ({iff, equals, notEquals, includes, evaluatedValue}: IffDiff) => ({
@@ -34,14 +28,9 @@ const propDefGetter = [
         reflect: true,
         async: true,
     }),
-    // ({evaluatedValue}: IffDiff) => ({
-    //     type: Boolean,
-    //     reflect: true,
-    //     async: true,
-    //     dry: true,
-    // })
+
 ] as destructPropInfo[];
-const propDefs = getPropDefs(propDefGetter);
+const propDefs = xc.getPropDefs(propDefGetter);
 
 const linkValue = ({iff, lhs, rhs, includes, equals, notEquals, self, disabled}: IffDiff) => {
     let val = self.iff;
@@ -98,7 +87,7 @@ export class IffDiff extends HTMLElement implements ReactiveSurface{
     disabled: boolean | undefined;
 
     //boilerplate
-    propActions = propActions; reactor = new Reactor(this); self=this;
+    propActions = propActions; reactor = new xc.Reactor(this); self=this;
 
     /**
      * Boolean property / attribute -- must be true to pass test(s)
@@ -160,12 +149,12 @@ export class IffDiff extends HTMLElement implements ReactiveSurface{
 
     connectedCallback(){
         this.style.display = 'none';
-        hydrate(this, propDefs);
+        xc.hydrate(this, propDefs);
     }
 
 }
-letThereBeProps(IffDiff, propDefs, 'onPropChange');
-define(IffDiff);
+xc.letThereBeProps(IffDiff, propDefs, 'onPropChange');
+xc.define(IffDiff);
 
 declare global {
     interface HTMLElementTagNameMap {
