@@ -7,7 +7,9 @@
 
 iff-diff is a simplified version of [if-diff](https://github.com/bahrus/if-diff).  Iff-diff only affects its next sibling.
 
-iff-diff supports setting (or removing) an attribute, a class, and/or a part.
+iff-diff supports setting (or removing) an attribute, a class, and/or a part from that next sibling.  That is all.
+
+iff-diff might be used in combination with a lazy loading component, like [laissez-dom](https://github.com/bahrus/laissez-dom).
 
 ## Example Syntax
 
