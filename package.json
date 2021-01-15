@@ -1,6 +1,6 @@
 {
   "name": "iff-diff",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "iff-diff.js",
   "module": "iff-diff.js",
