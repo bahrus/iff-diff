@@ -4,10 +4,14 @@ import { letThereBeProps } from 'xtal-element/lib/letThereBeProps.js';
 import { hydrate } from 'xtal-element/lib/hydrate.js';
 import { Reactor } from 'xtal-element/lib/Reactor.js';
 const propDefGetter = [
-    ({ iff, equals, notEquals, includes }) => ({
+    ({ iff, equals, notEquals, includes, evaluatedValue }) => ({
         type: Boolean,
         dry: true,
         async: true,
+    }),
+    ({ disabled }) => ({
+        type: Boolean,
+        reflect: true
     }),
     ({ lhs, rhs }) => ({
         type: Object,
@@ -18,6 +22,7 @@ const propDefGetter = [
         type: String,
         dry: true,
         async: true,
+        stopReactionsIfFalsy: true
     }),
     ({ value }) => ({
         type: Boolean,
@@ -26,17 +31,10 @@ const propDefGetter = [
         reflect: true,
         async: true,
     }),
-    ({ evaluatedCount }) => ({
-        type: Number,
-        reflect: true,
-        async: true,
-        dry: true,
-    })
 ];
 const propDefs = getPropDefs(propDefGetter);
-const linkValue = ({ iff, lhs, rhs, includes, equals, notEquals, self }) => {
+const linkValue = ({ iff, lhs, rhs, includes, equals, notEquals, self, disabled }) => {
     let val = self.iff;
-    console.log(iff, lhs, rhs, includes, equals, notEquals);
     if (val) {
         if (equals || notEquals) {
             let eq = false;
@@ -60,12 +58,12 @@ const linkValue = ({ iff, lhs, rhs, includes, equals, notEquals, self }) => {
     else {
         self.value = !!val;
     }
-    self.evaluatedCount++;
+    self.evaluatedValue = true;
+    ;
 };
-const affectNextSibling = ({ self, value, setAttr, setClass, setPart, evaluatedCount }) => {
-    if (evaluatedCount === 0)
+const affectNextSibling = ({ self, value, setAttr, setClass, setPart, evaluatedValue }) => {
+    if (!evaluatedValue)
         return;
-    console.log(value, setAttr, setClass, setPart, evaluatedCount);
     const ns = self.nextElementSibling;
     if (ns === null) {
         setTimeout(() => affectNextSibling(self), 50);
@@ -99,7 +97,7 @@ export class IffDiff extends HTMLElement {
         this.propActions = propActions;
         this.reactor = new Reactor(this);
         this.self = this;
-        this.evaluatedCount = 0;
+        this.evaluatedValue = false;
         /**
          * Computed based on values of  if / equals / not_equals / includes
          */

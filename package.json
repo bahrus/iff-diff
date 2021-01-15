@@ -9,7 +9,7 @@
     "start": "web-dev-server --node-resolve --app-index demo/dev.html  --watch --open"
   },
   "dependencies": {
-    "xtal-element": "0.0.323"
+    "xtal-element": "0.0.326"
   },
   "devDependencies": {
     "@web/dev-server": "0.0.21"

@@ -9,6 +9,7 @@
     <iff-diff id=iffdiff></iff-diff>
     <div>I am here</div>
     <script>
+        iffdiff.disabled = true;
         iffdiff.lhs = 10;
         iffdiff.rhs = 10;
         iffdiff.iff = true;
@@ -16,6 +17,9 @@
         iffdiff.setAttr = 'attr';
         iffdiff.setClass = 'someClass';
         iffdiff.setPart = 'somePart';
+        setTimeout(() => {
+            iffdiff.disabled = false;
+        }, 1000);
     </script>
     <script type=module>
         import '../iff-diff.js';

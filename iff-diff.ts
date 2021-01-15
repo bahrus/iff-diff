@@ -7,10 +7,14 @@ import {Reactor, ReactiveSurface} from 'xtal-element/lib/Reactor.js';
 
 
 const propDefGetter = [
-    ({iff, equals, notEquals, includes}: IffDiff) => ({
+    ({iff, equals, notEquals, includes, evaluatedValue}: IffDiff) => ({
         type: Boolean,
         dry: true,
         async: true,
+    }),
+    ({disabled}: IffDiff) => ({
+        type: Boolean,
+        reflect: true
     }),
     ({lhs, rhs}: IffDiff) => ({
         type: Object,
@@ -21,6 +25,7 @@ const propDefGetter = [
         type: String,
         dry: true,
         async: true,
+        stopReactionsIfFalsy: true
     }),
     ({value}: IffDiff) => ({
         type: Boolean,
@@ -29,18 +34,17 @@ const propDefGetter = [
         reflect: true,
         async: true,
     }),
-    ({evaluatedCount}: IffDiff) => ({
-        type: Number,
-        reflect: true,
-        async: true,
-        dry: true,
-    })
+    // ({evaluatedValue}: IffDiff) => ({
+    //     type: Boolean,
+    //     reflect: true,
+    //     async: true,
+    //     dry: true,
+    // })
 ] as destructPropInfo[];
 const propDefs = getPropDefs(propDefGetter);
 
-const linkValue = ({iff, lhs, rhs, includes, equals, notEquals, self}: IffDiff) => {
+const linkValue = ({iff, lhs, rhs, includes, equals, notEquals, self, disabled}: IffDiff) => {
     let val = self.iff;
-    console.log(iff, lhs, rhs, includes, equals, notEquals);
     if(val){
         if(equals || notEquals){
             let eq = false;
@@ -61,12 +65,11 @@ const linkValue = ({iff, lhs, rhs, includes, equals, notEquals, self}: IffDiff) 
     }else{
         self.value = !!val;
     }
-    self.evaluatedCount++;
+    self.evaluatedValue = true;;
 };
 
-const affectNextSibling = ({self, value, setAttr, setClass, setPart, evaluatedCount}: IffDiff) => {
-    if(evaluatedCount === 0) return;
-    console.log(value, setAttr, setClass, setPart, evaluatedCount);
+const affectNextSibling = ({self, value, setAttr, setClass, setPart, evaluatedValue}: IffDiff) => {
+    if(!evaluatedValue) return;
     const ns = self.nextElementSibling;
     if(ns ===  null){
         setTimeout(() => affectNextSibling(self), 50);
@@ -91,6 +94,8 @@ const propActions = [
 
 export class IffDiff extends HTMLElement implements ReactiveSurface{
     static is = 'iff-diff';
+
+    disabled: boolean | undefined;
 
     //boilerplate
     propActions = propActions; reactor = new Reactor(this); self=this;
@@ -142,7 +147,7 @@ export class IffDiff extends HTMLElement implements ReactiveSurface{
     setPart: string | undefined;
 
     
-    evaluatedCount: number = 0;
+    evaluatedValue: boolean = false;
 
     /**
      * Computed based on values of  if / equals / not_equals / includes 
