@@ -1,36 +1,38 @@
-import {xc, destructPropInfo, PropAction, ReactiveSurface, PropDef} from 'xtal-element/lib/XtalCore.js';
+import {xc, PropAction, ReactiveSurface, PropDef, PropDefMap} from 'xtal-element/lib/XtalCore.js';
 
-const propDefGetter = [
-    ({iff, equals, notEquals, includes, evaluatedValue}: IffDiff) => ({
+const bool1: PropDef = {
+    type: Boolean,
+    dry: true,
+    async: true,
+};
+const obj1: PropDef = {
+    type: Object,
+    dry: true,
+    async: true,
+};
+const str1: PropDef = {
+    type: String,
+    dry: true,
+    async: true,
+    stopReactionsIfFalsy: true
+};
+const propDefMap: PropDefMap<IffDiff> = {
+    iff: bool1, notEquals: bool1, includes: bool1, evaluatedValue: bool1,
+    disabled: {
         type: Boolean,
-        dry: true,
-        async: true,
-    }),
-    ({disabled}: IffDiff) => ({
-        type: Boolean,
-        reflect: true
-    }),
-    ({lhs, rhs}: IffDiff) => ({
-        type: Object,
-        dry: true,
-        async: true,
-    }),
-    ({setAttr, setClass, setPart}: IffDiff) => ({
-        type: String,
-        dry: true,
-        async: true,
-        stopReactionsIfFalsy: true
-    }),
-    ({value}: IffDiff) => ({
+        reflect: true,
+    },
+    lhs: obj1, rhs: obj1,
+    setAttr: str1, setClass: str1, setPart: str1,
+    value:{
         type: Boolean,
         dry: true,
         notify: true,
         reflect: true,
         async: true,
-    }),
-
-] as destructPropInfo[];
-const propDefs = xc.getPropDefs(propDefGetter);
+    }
+};
+const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 
 const linkValue = ({iff, lhs, rhs, includes, equals, notEquals, self, disabled}: IffDiff) => {
     let val = self.iff;
@@ -149,11 +151,11 @@ export class IffDiff extends HTMLElement implements ReactiveSurface{
 
     connectedCallback(){
         this.style.display = 'none';
-        xc.hydrate(this, propDefs);
+        xc.hydrate(this, slicedPropDefs);
     }
 
 }
-xc.letThereBeProps(IffDiff, propDefs, 'onPropChange');
+xc.letThereBeProps(IffDiff, slicedPropDefs.propDefs, 'onPropChange');
 xc.define(IffDiff);
 
 declare global {

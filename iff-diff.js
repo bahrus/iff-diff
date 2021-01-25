@@ -1,34 +1,37 @@
 import { xc } from 'xtal-element/lib/XtalCore.js';
-const propDefGetter = [
-    ({ iff, equals, notEquals, includes, evaluatedValue }) => ({
+const bool1 = {
+    type: Boolean,
+    dry: true,
+    async: true,
+};
+const obj1 = {
+    type: Object,
+    dry: true,
+    async: true,
+};
+const str1 = {
+    type: String,
+    dry: true,
+    async: true,
+    stopReactionsIfFalsy: true
+};
+const propDefMap = {
+    iff: bool1, notEquals: bool1, includes: bool1, evaluatedValue: bool1,
+    disabled: {
         type: Boolean,
-        dry: true,
-        async: true,
-    }),
-    ({ disabled }) => ({
-        type: Boolean,
-        reflect: true
-    }),
-    ({ lhs, rhs }) => ({
-        type: Object,
-        dry: true,
-        async: true,
-    }),
-    ({ setAttr, setClass, setPart }) => ({
-        type: String,
-        dry: true,
-        async: true,
-        stopReactionsIfFalsy: true
-    }),
-    ({ value }) => ({
+        reflect: true,
+    },
+    lhs: obj1, rhs: obj1,
+    setAttr: str1, setClass: str1, setPart: str1,
+    value: {
         type: Boolean,
         dry: true,
         notify: true,
         reflect: true,
         async: true,
-    }),
-];
-const propDefs = xc.getPropDefs(propDefGetter);
+    }
+};
+const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 const linkValue = ({ iff, lhs, rhs, includes, equals, notEquals, self, disabled }) => {
     let val = self.iff;
     if (val) {
@@ -104,9 +107,9 @@ export class IffDiff extends HTMLElement {
     }
     connectedCallback() {
         this.style.display = 'none';
-        xc.hydrate(this, propDefs);
+        xc.hydrate(this, slicedPropDefs);
     }
 }
 IffDiff.is = 'iff-diff';
-xc.letThereBeProps(IffDiff, propDefs, 'onPropChange');
+xc.letThereBeProps(IffDiff, slicedPropDefs.propDefs, 'onPropChange');
 xc.define(IffDiff);
