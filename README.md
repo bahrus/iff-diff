@@ -33,7 +33,8 @@ Multiple iff-diffs can share the results of a single iff-diff instance:
 <iff-diff id=source-of-truth -if -lhs -equals -rhs set-attr="some-attribute" set-class="some-class" set-part="some-part"></iff-diff>
 <div></div>
 ...
-<iff-diff sync-with=source-of-truth></iff-diff>
+<iff-diff sync-with=source-of-truth set-class="some-other-class"></iff-diff>
+<span></span>
 ```
 
 Restrictions:  
