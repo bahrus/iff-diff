@@ -9,17 +9,17 @@
     "start": "web-dev-server --node-resolve --app-index demo/dev.html  --watch --open"
   },
   "dependencies": {
-    "xtal-element": "0.0.334"
+    "xtal-element": "0.0.361"
   },
   "devDependencies": {
-    "@web/dev-server": "0.0.21"
+    "@web/dev-server": "0.1.8"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bahrus/iff-diff.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/bahrus/iff-diff/issues"
   },
