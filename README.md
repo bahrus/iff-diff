@@ -5,7 +5,7 @@
 # iff-diff
 
 
-iff-diff is a simplified version of [if-diff](https://github.com/bahrus/if-diff).  Iff-diff only affects its next sibling.
+iff-diff is a simplified version of [if-diff](https://github.com/bahrus/if-diff).  iff-diff only affects its next sibling.
 
 iff-diff supports setting (or removing) an attribute, a class, and/or a part from that next sibling, depending on the specified condition.  
 
@@ -25,7 +25,7 @@ Other options to "equals" are "not-equals" and "includes".
 
 lhs, rhs can be strings, numbers, or objects (in which case the two objects are compared recursively.)
 
-## Shared condition [TODO]
+## Shared condition
 
 Multiple iff-diffs can share the results of a single iff-diff instance:
 
