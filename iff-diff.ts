@@ -80,7 +80,7 @@ import {xc, PropAction, ReactiveSurface, PropDef, PropDefMap} from 'xtal-element
     /**
      * Computed based on values of  if / equals / not_equals / includes 
      */
-    value: boolean = false;
+    value: boolean | undefined;
 
     onPropChange(n: string, propDef: PropDef, newVal: any){
         this.reactor.addToQueue(propDef, newVal);
@@ -95,6 +95,7 @@ import {xc, PropAction, ReactiveSurface, PropDef, PropDefMap} from 'xtal-element
 
 
 const linkValue = ({iff, lhs, rhs, includes, equals, notEquals, self, disabled}: IffDiff) => {
+    if(self.syncWith !== undefined) return;
     const key = slicedPropDefs.propLookup.value!.alias!;
     const aSelf = self as any;
     let val = self.iff;
@@ -126,6 +127,8 @@ const linkValueFromReference = ({syncWith, self}: IffDiff) => {
     if(sourceOfTruth == null) throw syncWith + " not found.";
     self.disconnect();
     self.sysOfRec = new WeakRef<IffDiff>(sourceOfTruth);
+    const key = slicedPropDefs.propLookup.value!.alias!;
+    (<any>self)[key] = sourceOfTruth.value; 
     sourceOfTruth.addEventListener('value-changed', self.sysOfRecHandler.bind(self));
     
 }
@@ -172,6 +175,11 @@ const str1: PropDef = {
     async: true,
     stopReactionsIfFalsy: true
 };
+const str2: PropDef = {
+    type: String,
+    dry: true,
+    async: true,
+};
 const propDefMap: PropDefMap<IffDiff> = {
     iff: bool1, notEquals: bool1, includes: bool1, evaluatedValue: bool1,
     disabled: {
@@ -179,7 +187,7 @@ const propDefMap: PropDefMap<IffDiff> = {
         reflect: true,
     },
     lhs: obj1, rhs: obj1,
-    setAttr: str1, setClass: str1, setPart: str1,
+    setAttr: str2, setClass: str2, setPart: str2,
     value:{
         type: Boolean,
         dry: true,

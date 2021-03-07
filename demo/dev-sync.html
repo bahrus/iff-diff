@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <iff-diff id=iffdiff></iff-diff>
+    <span></span>
+    <iff-diff sync-with=iffdiff set-attr="hello"></iff-diff>
+    <div>I am here</div>
+    <script>
+        iffdiff.disabled = true;
+        iffdiff.lhs = 10;
+        iffdiff.rhs = 10;
+        iffdiff.iff = true;
+        iffdiff.equals = true;
+        iffdiff.setAttr = 'attr';
+        iffdiff.setClass = 'someClass';
+        iffdiff.setPart = 'somePart';
+        setTimeout(() => {
+            iffdiff.disabled = false;
+        }, 1000);
+    </script>
+    <script type=module>
+        import '../iff-diff.js';
+    </script>
+</body>
+</html>
