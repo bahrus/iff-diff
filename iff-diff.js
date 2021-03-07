@@ -15,6 +15,19 @@ export class IffDiff extends HTMLElement {
          */
         this.value = false;
     }
+    sysOfRecHandler(e) {
+        const key = slicedPropDefs.propLookup.value.alias;
+        this[key] = e.detail.value;
+    }
+    disconnectedCallback() {
+        this.disconnect();
+    }
+    disconnect() {
+        const sys = this.sysOfRec?.deref();
+        if (sys === undefined)
+            return;
+        sys.removeEventListener('value-changed', this.sysOfRecHandler);
+    }
     onPropChange(n, propDef, newVal) {
         this.reactor.addToQueue(propDef, newVal);
     }
@@ -54,6 +67,14 @@ const linkValue = ({ iff, lhs, rhs, includes, equals, notEquals, self, disabled 
     self.evaluatedValue = true;
     ;
 };
+const linkValueFromReference = ({ syncWith, self }) => {
+    const sourceOfTruth = self.getRootNode().querySelector('#' + syncWith);
+    if (sourceOfTruth == null)
+        throw syncWith + " not found.";
+    self.disconnect();
+    self.sysOfRec = new WeakRef(sourceOfTruth);
+    sourceOfTruth.addEventListener('value-changed', self.sysOfRecHandler.bind(self));
+};
 const affectNextSibling = ({ self, value, setAttr, setClass, setPart, evaluatedValue }) => {
     if (!evaluatedValue)
         return;
@@ -82,6 +103,7 @@ const affectNextSibling = ({ self, value, setAttr, setClass, setPart, evaluatedV
 const propActions = [
     linkValue,
     affectNextSibling,
+    linkValueFromReference,
 ];
 const bool1 = {
     type: Boolean,
@@ -114,7 +136,8 @@ const propDefMap = {
         reflect: true,
         async: true,
         obfuscate: true,
-    }
+    },
+    syncWith: str1
 };
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps(IffDiff, slicedPropDefs, 'onPropChange');

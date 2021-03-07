@@ -11,6 +11,22 @@ import {xc, PropAction, ReactiveSurface, PropDef, PropDefMap} from 'xtal-element
     //boilerplate
     propActions = propActions; reactor = new xc.Rx(this); self=this;
 
+    sysOfRec: WeakRef<IffDiff> | undefined;
+    sysOfRecHandler(e: Event){
+        const key = slicedPropDefs.propLookup.value!.alias!;
+        (<any>this)[key] = (<any>e).detail.value; 
+    }
+
+    disconnectedCallback(){
+        this.disconnect();
+    }
+
+    disconnect(){
+        const sys = this.sysOfRec?.deref();
+        if(sys === undefined) return;
+        sys.removeEventListener('value-changed' as keyof HTMLElementEventMap, this.sysOfRecHandler);
+    }
+
     /**
      * Boolean property / attribute -- must be true to pass test(s)
      * @attr
@@ -57,6 +73,7 @@ import {xc, PropAction, ReactiveSurface, PropDef, PropDefMap} from 'xtal-element
 
     setPart: string | undefined;
 
+    syncWith: string | undefined;
     
     evaluatedValue: boolean = false;
 
@@ -104,6 +121,15 @@ const linkValue = ({iff, lhs, rhs, includes, equals, notEquals, self, disabled}:
     self.evaluatedValue = true;;
 };
 
+const linkValueFromReference = ({syncWith, self}: IffDiff) => {
+    const sourceOfTruth = (self.getRootNode() as HTMLElement).querySelector('#' + syncWith!) as IffDiff;
+    if(sourceOfTruth == null) throw syncWith + " not found.";
+    self.disconnect();
+    self.sysOfRec = new WeakRef<IffDiff>(sourceOfTruth);
+    sourceOfTruth.addEventListener('value-changed', self.sysOfRecHandler.bind(self));
+    
+}
+
 const affectNextSibling = ({self, value, setAttr, setClass, setPart, evaluatedValue}: IffDiff) => {
     if(!evaluatedValue) return;
     const ns = self.nextElementSibling;
@@ -126,6 +152,7 @@ const affectNextSibling = ({self, value, setAttr, setClass, setPart, evaluatedVa
 const propActions = [
     linkValue,
     affectNextSibling,
+    linkValueFromReference,
 ] as PropAction[];
 
 
@@ -160,7 +187,8 @@ const propDefMap: PropDefMap<IffDiff> = {
         reflect: true,
         async: true,
         obfuscate: true,
-    }
+    },
+    syncWith: str1
 };
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 
