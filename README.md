@@ -29,19 +29,19 @@ lhs, rhs can be strings, numbers, or objects (in which case the two objects are 
 
 If this component is used inside a (code-centric) library capable of "declaratively" setting attributes on the "owned" elements, does this component make sense?
 
-In that scenario, the "benefits vs cost" question probably only comes out on top if using the feature where the lhs and rhs can be objects, and the comparison can be made recursively.
+In that scenario, the "benefits vs cost" question probably only comes close if using the feature where the lhs and rhs can be objects, and the comparison can be made recursively.
 
-This component makes most sense to use in a HTML-first environment, where the goal is to avoid "context-switching" into JavaScript as much as possible.  It benefits from the existence of other components capable of dynamically passing in the values of properties if, lhs, equals, rhs declaratively.  For example, with [p-et-alia](https://github.com/bahrus/p-et-alia) or the smaller [on-to-me](https://github.com/bahrus/on-to-me) components:
+By far, this component makes most sense to use in a HTML-first environment, where the goal is to avoid "context-switching" into JavaScript as much as possible.  It benefits from the existence of other components capable of dynamically passing in the values of properties if, lhs, equals, rhs declaratively.  For example, with [p-et-alia](https://github.com/bahrus/p-et-alia) or the smaller [on-to-me](https://github.com/bahrus/on-to-me) components:
 
 ```html
 <ways-of-science>
-    <weight-scale>
+    <largest-scale>
         <woman-with-carrot-attached-to-nose></woman-with-carrot-attached-to-nose>
-    </weight-scale>
+    </largest-scale>
     <p-d on=value-changed to=[-lhs] m=1 val=target.value></p-d>
-    <weight-scale>
+    <largest-scale>
         <a-duck></a-duck>
-    <weight-scale>
+    </largest-scale>
     <p-d on=value-changed to=[-rhs] m=1 val=target.value></p-d>
     <iff-diff if -lhs not-equals -rhs set-attr=hidden></iff-diff>
     <div hidden>A witch!</div>
