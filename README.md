@@ -17,7 +17,7 @@ iff-diff might be used in combination with a lazy loading component, like [laiss
 
 ```html
 <!-- p-et-alia notation -->
-<iff-diff -if -lhs -equals -rhs set-attr="some-attribute" set-class="some-class" set-part="some-part"></iff-diff>
+<iff-diff iff -lhs equals -rhs set-attr="some-attribute" set-class="some-class" set-part="some-part"></iff-diff>
 <div></div>
 ```
 
@@ -31,7 +31,7 @@ If this component is used inside a (code-centric) library capable of "declarativ
 
 In that scenario, the "benefits vs cost" question probably only comes close if using the feature where the lhs and rhs can be objects, and the comparison can be made recursively.
 
-By far, this component makes most sense to use in a HTML-first environment, where the goal is to avoid "context-switching" into JavaScript as much as possible.  It benefits from the existence of other components capable of dynamically passing in the values of properties if, lhs, equals, rhs declaratively.  For example, with [p-et-alia](https://github.com/bahrus/p-et-alia) or the smaller [on-to-me](https://github.com/bahrus/on-to-me) components:
+By far, this component makes most sense to use in a HTML-first environment, where the goal is to avoid "context-switching" into JavaScript as much as possible.  It benefits from the existence of other components capable of dynamically passing in the values of properties if, lhs, rhs, etc. declaratively.  For example, with [p-et-alia](https://github.com/bahrus/p-et-alia) or the smaller [on-to-me](https://github.com/bahrus/on-to-me) components:
 
 ```html
 <ways-of-science>
@@ -43,7 +43,7 @@ By far, this component makes most sense to use in a HTML-first environment, wher
         <a-duck></a-duck>
     </largest-scale>
     <p-d on=value-changed to=[-rhs] m=1 val=target.value></p-d>
-    <iff-diff if -lhs not-equals -rhs set-attr=hidden></iff-diff>
+    <iff-diff iff -lhs not-equals -rhs set-attr=hidden></iff-diff>
     <div hidden>A witch!</div>
 </ways-of-science>
 ```
@@ -66,7 +66,7 @@ To share the negation of another if-diff instance[TODO]:
 <iff-diff id=source-of-truth -if -lhs -equals -rhs set-attr="some-attribute" set-class="some-class" set-part="some-part"></iff-diff>
 <div></div>
 ...
-<iff-diff sync-with-not=source-of-truth set-class="some-other-class"></iff-diff>
+<iff-diff sync-not-with=source-of-truth set-class="some-other-class"></iff-diff>
 <span></span>
 ```
 

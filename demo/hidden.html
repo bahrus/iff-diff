@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input value=lhs>
+    <on-to-me on=input to=[-lhs] me=1 val=target.value init-val=value></on-to-me>
+    <input value=rhs>
+    <on-to-me on=input to=[-rhs] me=1 val=target.value init-val=value></on-to-me>
+    <iff-diff iff -lhs not-equals -rhs set-attr=hidden></iff-diff>
+    <div hidden>not equals</div>
+    <script type=importmap>
+        {
+            "imports" : {
+                "xtal-element/": "../node_modules/xtal-element/",
+                "trans-render/": "../node_modules/trans-render/",
+                "on-to-me/": "../node_modules/on-to-me/"
+            }
+        }
+    </script>
+    <script type=module src="../iff-diff.js"></script>
+    <script type=module>
+        import 'on-to-me/on-to-me.js';
+    </script>
+</body>
+</html>

@@ -6,13 +6,16 @@
   "module": "iff-diff.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "web-dev-server --node-resolve --app-index demo/index.html  --watch --open"
+    "start": "web-dev-server --node-resolve --app-index demo/index.html  --watch --open",
+    "serve": "node node_modules/xtal-test/serve.js"
   },
   "dependencies": {
-    "xtal-element": "0.0.361"
+    "xtal-element": "0.0.365"
   },
   "devDependencies": {
-    "@web/dev-server": "0.1.8"
+    "@web/dev-server": "0.1.8",
+    "on-to-me": "0.0.10",
+    "xtal-test": "0.0.50"
   },
   "repository": {
     "type": "git",
