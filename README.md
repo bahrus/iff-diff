@@ -53,25 +53,26 @@ By far, this component makes most sense to use in a HTML-first environment, wher
 Multiple iff-diffs can share the results of a single iff-diff instance:
 
 ```html
-<iff-diff id=source-of-truth -if -lhs -equals -rhs set-attr="some-attribute" set-class="some-class" set-part="some-part"></iff-diff>
+<iff-diff id=source-of-truth -iff -lhs -equals -rhs set-attr="some-attribute" set-class="some-class" set-part="some-part"></iff-diff>
 <div></div>
 ...
 <iff-diff sync-with=source-of-truth set-class="some-other-class"></iff-diff>
 <span></span>
 ```
 
-To share the negation of another if-diff instance[TODO]:
+To share the negation of another if-diff instance:
 
 ```html
-<iff-diff id=source-of-truth -if -lhs -equals -rhs set-attr="some-attribute" set-class="some-class" set-part="some-part"></iff-diff>
+<iff-diff id=source-of-truth -iff -lhs -equals -rhs set-attr="some-attribute" set-class="some-class" set-part="some-part"></iff-diff>
 <div></div>
 ...
-<iff-diff sync-not-with=source-of-truth set-class="some-other-class"></iff-diff>
+<iff-diff anti-sync-with=source-of-truth set-class="some-other-class"></iff-diff>
 <span></span>
 ```
 
 Restrictions:  
 
 1.  This only works for instances within the same ShadowDOM realm.
+2.  The source-of-truth instance is guaranteed to be found if the source-of-truth instance comes before the referencing instance(s) in the document order.  This is most applicable when employing streaming.
 
 

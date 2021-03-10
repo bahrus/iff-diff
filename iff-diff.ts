@@ -14,7 +14,7 @@ import {xc, PropAction, ReactiveSurface, PropDef, PropDefMap} from 'xtal-element
     sysOfRec: WeakRef<IffDiff> | undefined;
     sysOfRecHandler(e: Event){
         const key = slicedPropDefs.propLookup.value!.alias!;
-        (<any>this)[key] = (<any>e).detail.value; 
+        (<any>this)[key] = this.syncWith !== undefined ? (<any>e).detail.value : !(<any>e).detail.value; 
     }
 
     disconnectedCallback(){
@@ -74,6 +74,8 @@ import {xc, PropAction, ReactiveSurface, PropDef, PropDefMap} from 'xtal-element
     setPart: string | undefined;
 
     syncWith: string | undefined;
+
+    antiSyncWith: string | undefined;
     
     evaluatedValue: boolean = false;
 
@@ -95,7 +97,7 @@ import {xc, PropAction, ReactiveSurface, PropDef, PropDefMap} from 'xtal-element
 
 
 const linkValue = ({iff, lhs, rhs, includes, equals, notEquals, self, disabled}: IffDiff) => {
-    if(self.syncWith !== undefined) return;
+    if((self.syncWith || self.antiSyncWith) !== undefined) return; // don't compute our own value
     const key = slicedPropDefs.propLookup.value!.alias!;
     const aSelf = self as any;
     let val = self.iff;
@@ -122,8 +124,10 @@ const linkValue = ({iff, lhs, rhs, includes, equals, notEquals, self, disabled}:
     self.evaluatedValue = true;;
 };
 
-const linkValueFromReference = ({syncWith, self}: IffDiff) => {
-    const sourceOfTruth = (self.getRootNode() as HTMLElement).querySelector('#' + syncWith!) as IffDiff;
+const linkValueFromReference = ({syncWith, antiSyncWith, self}: IffDiff) => {
+    const union = syncWith || antiSyncWith;
+    if(union === undefined) return;
+    const sourceOfTruth = (self.getRootNode() as HTMLElement).querySelector('#' + union) as IffDiff;
     if(sourceOfTruth == null) throw syncWith + " not found.";
     self.disconnect();
     self.sysOfRec = new WeakRef<IffDiff>(sourceOfTruth);
@@ -173,12 +177,6 @@ const str1: PropDef = {
     type: String,
     dry: true,
     async: true,
-    stopReactionsIfFalsy: true
-};
-const str2: PropDef = {
-    type: String,
-    dry: true,
-    async: true,
 };
 const propDefMap: PropDefMap<IffDiff> = {
     iff: bool1, notEquals: bool1, includes: bool1, evaluatedValue: bool1,
@@ -187,7 +185,7 @@ const propDefMap: PropDefMap<IffDiff> = {
         reflect: true,
     },
     lhs: obj1, rhs: obj1,
-    setAttr: str2, setClass: str2, setPart: str2,
+    setAttr: str1, setClass: str1, setPart: str1,
     value:{
         type: Boolean,
         dry: true,
@@ -196,7 +194,7 @@ const propDefMap: PropDefMap<IffDiff> = {
         async: true,
         obfuscate: true,
     },
-    syncWith: str1
+    syncWith: str1, antiSyncWith: str1
 };
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 

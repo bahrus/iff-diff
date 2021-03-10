@@ -13,7 +13,7 @@ export class IffDiff extends HTMLElement {
     }
     sysOfRecHandler(e) {
         const key = slicedPropDefs.propLookup.value.alias;
-        this[key] = e.detail.value;
+        this[key] = this.syncWith !== undefined ? e.detail.value : !e.detail.value;
     }
     disconnectedCallback() {
         this.disconnect();
@@ -34,8 +34,8 @@ export class IffDiff extends HTMLElement {
 }
 IffDiff.is = 'iff-diff';
 const linkValue = ({ iff, lhs, rhs, includes, equals, notEquals, self, disabled }) => {
-    if (self.syncWith !== undefined)
-        return;
+    if ((self.syncWith || self.antiSyncWith) !== undefined)
+        return; // don't compute our own value
     const key = slicedPropDefs.propLookup.value.alias;
     const aSelf = self;
     let val = self.iff;
@@ -65,8 +65,11 @@ const linkValue = ({ iff, lhs, rhs, includes, equals, notEquals, self, disabled 
     self.evaluatedValue = true;
     ;
 };
-const linkValueFromReference = ({ syncWith, self }) => {
-    const sourceOfTruth = self.getRootNode().querySelector('#' + syncWith);
+const linkValueFromReference = ({ syncWith, antiSyncWith, self }) => {
+    const union = syncWith || antiSyncWith;
+    if (union === undefined)
+        return;
+    const sourceOfTruth = self.getRootNode().querySelector('#' + union);
     if (sourceOfTruth == null)
         throw syncWith + " not found.";
     self.disconnect();
@@ -119,12 +122,6 @@ const str1 = {
     type: String,
     dry: true,
     async: true,
-    stopReactionsIfFalsy: true
-};
-const str2 = {
-    type: String,
-    dry: true,
-    async: true,
 };
 const propDefMap = {
     iff: bool1, notEquals: bool1, includes: bool1, evaluatedValue: bool1,
@@ -133,7 +130,7 @@ const propDefMap = {
         reflect: true,
     },
     lhs: obj1, rhs: obj1,
-    setAttr: str2, setClass: str2, setPart: str2,
+    setAttr: str1, setClass: str1, setPart: str1,
     value: {
         type: Boolean,
         dry: true,
@@ -142,7 +139,7 @@ const propDefMap = {
         async: true,
         obfuscate: true,
     },
-    syncWith: str1
+    syncWith: str1, antiSyncWith: str1
 };
 const slicedPropDefs = xc.getSlicedPropDefs(propDefMap);
 xc.letThereBeProps(IffDiff, slicedPropDefs, 'onPropChange');
