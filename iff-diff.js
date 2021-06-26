@@ -29,7 +29,7 @@ export class IffDiff extends HTMLElement {
     }
     connectedCallback() {
         this.style.display = 'none';
-        xc.hydrate(this, slicedPropDefs);
+        xc.mergeProps(this, slicedPropDefs);
     }
 }
 IffDiff.is = 'iff-diff';
@@ -57,6 +57,9 @@ const linkValue = ({ iff, lhs, rhs, includes, equals, notEquals, self, disabled 
             import('./includes.js').then(({ includes }) => {
                 aSelf[key] = includes(lhs, rhs);
             });
+        }
+        else {
+            aSelf[key] = !!val;
         }
     }
     else {

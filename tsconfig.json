@@ -8,11 +8,10 @@
 		"strict": true,
 		"watch": true
 	},
-	"exclude":[
-		"build",
-		"node_modules",
-		"bower_components",
-		"demo/PolymerTests/bower_components"
+	"files": [
+		"iff-diff.ts",
+		"compare.ts",
+		"includes.ts"
 	]
 
 }

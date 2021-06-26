@@ -1,4 +1,4 @@
-import {xc, PropAction, ReactiveSurface, PropDef, PropDefMap} from 'xtal-element/lib/XtalCore.js';
+import {xc, PropAction, ReactiveSurface, PropDef, PropDefMap, IReactor} from 'xtal-element/lib/XtalCore.js';
 
 /**
  * @element iff-diff
@@ -9,7 +9,8 @@ import {xc, PropAction, ReactiveSurface, PropDef, PropDefMap} from 'xtal-element
     disabled: boolean | undefined;
 
     //boilerplate
-    propActions = propActions; reactor = new xc.Rx(this); self=this;
+    propActions = propActions; 
+    reactor: IReactor = new xc.Rx(this); self=this;
 
     sysOfRec: WeakRef<IffDiff> | undefined;
     sysOfRecHandler(e: Event){
@@ -90,7 +91,7 @@ import {xc, PropAction, ReactiveSurface, PropDef, PropDefMap} from 'xtal-element
 
     connectedCallback(){
         this.style.display = 'none';
-        xc.hydrate(this, slicedPropDefs);
+        xc.mergeProps(this, slicedPropDefs);
     }
 
 }
@@ -117,6 +118,8 @@ const linkValue = ({iff, lhs, rhs, includes, equals, notEquals, self, disabled}:
             import('./includes.js').then(({includes}) => {
                 aSelf[key] = includes(lhs, rhs);
             });
+        }else{
+            aSelf[key] = !!val;
         }
     }else{
         aSelf[key] = !!val;

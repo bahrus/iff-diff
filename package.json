@@ -10,12 +10,12 @@
     "serve": "node node_modules/xtal-test/serve.js"
   },
   "dependencies": {
-    "xtal-element": "0.0.365"
+    "xtal-element": "0.0.402"
   },
   "devDependencies": {
-    "@web/dev-server": "0.1.8",
-    "on-to-me": "0.0.10",
-    "xtal-test": "0.0.50"
+    "@web/dev-server": "0.1.17",
+    "on-to-me": "0.0.23",
+    "xtal-test": "0.0.51"
   },
   "repository": {
     "type": "git",
